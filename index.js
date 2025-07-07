@@ -26,32 +26,36 @@ function recipeList(data) {
 //console.log(recipeList(emptyarray));
 
 function recipesByAuthor(recipeData, authorData) {
-  const result = recipeData
-  .filter(({ Author }) => Author === authorData)
-  .map(({ Name }) => Name);
-  console.log(result);
-  return result;
+  const result1 = recipeData.filter(({ Author }) => Author === authorData);
+  return recipeList(result1);
 }
 //recipesByAuthor(cakeRecipes, 'Mary Cadogan');
 
 function recipesByIngredient(recipeData, ingredientData) {
-  return recipeData
+  const result2 = recipeData
   .filter(({ Ingredients }) => 
     Ingredients.some(item => item.includes(ingredientData))
-  )
-  .map(({ Name }) => Name);
+  );
+  return recipeList(result2)
 }
 //console.log(recipesByIngredient(cakeRecipes, "140g caster sugar" ));
 
+let selectedRecipe = null;
+
 function recipesByName(recipeData, recipeNameData) {
-  return recipeData.find(({ Name }) => Name.includes(recipeNameData));
+  const foundRecipe = recipeData.find(({ Name }) => Name.includes(recipeNameData));
+  if (foundRecipe) {
+    selectedRecipe = foundRecipe;
+  }
+  return foundRecipe;
 }
 //console.log(recipesByName(cakeRecipes, 'Christmas pud cupcakes'));
 
-function createGroceryList(recipeData) {
-  return recipeData.reduce((groceryList, { Ingredients}) => {
-    return groceryList.concat(Ingredients);
-  }, []);
+function createGroceryList(recipeData = selectedRecipe) {
+  if(!recipeData || !recipeData.Ingredients) {
+    return [];
+  }
+  return recipeData.Ingredients;
 }
 
 // Part 2
@@ -91,7 +95,7 @@ do {
       console.log(recipesByName(cakeRecipes, recipeChoice));
         break;
     case 5:
-      console.log(createGroceryList(cakeRecipes));
+      console.log(createGroceryList());
       break;
     case 0:
       console.log("Exiting...");
