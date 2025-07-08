@@ -40,22 +40,31 @@ function recipesByIngredient(recipeData, ingredientData) {
 }
 //console.log(recipesByIngredient(cakeRecipes, "140g caster sugar" ));
 
-let selectedRecipe = null;
+let savedIngredients = [];
 
 function recipesByName(recipeData, recipeNameData) {
   const foundRecipe = recipeData.find(({ Name }) => Name.includes(recipeNameData));
   if (foundRecipe) {
-    selectedRecipe = foundRecipe;
+    const userResponse = prompt(`Recipe found: ${foundRecipe.Name}. Do you want to save the ingredients? (Y/N): `).toUpperCase();
+    if (userResponse === 'Y') {
+      savedIngredients.push(...foundRecipe.Ingredients);
+      console.log("Ingredients are saved.");
+      } else {
+        console.log("Ingredients are not saved.");
+      }
+  } else {
+    console.log("Recipe not found.");
   }
   return foundRecipe;
 }
 //console.log(recipesByName(cakeRecipes, 'Christmas pud cupcakes'));
 
-function createGroceryList(recipeData = selectedRecipe) {
-  if(!recipeData || !recipeData.Ingredients) {
+function createGroceryList() {
+  if(savedIngredients.length === 0) {
+    console.log("No ingredients saved.");
     return [];
   }
-  return recipeData.Ingredients;
+  return savedIngredients;
 }
 
 // Part 2
@@ -92,7 +101,7 @@ do {
       break;
     case 4:
       let recipeChoice = prompt("Choose a recipe: ")
-      console.log(recipesByName(cakeRecipes, recipeChoice));
+      recipesByName(cakeRecipes, recipeChoice);
         break;
     case 5:
       console.log(createGroceryList());
